@@ -1,0 +1,8 @@
+py-cord==2.3.1
+googletrans==3.1.0a0
+linereader
+bs4
+requests
+pytz
+lxml
+unidecode
