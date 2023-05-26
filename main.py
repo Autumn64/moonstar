@@ -53,12 +53,12 @@ reddit = asyncpraw.Reddit(client_id='ID',
 
 @moon.event
 async def on_ready():
-    ställd = False
+    ställd: bool = False
     print(" 안녕하세요 여러분 문별이다")
     print('\n {0.user}으로서 봇이 성공적으로 로그인했습니다'.format(moon))
     print('\n')
     while True:
-      time = int(datetime.datetime.now().strftime("%S"))
+      time: int = int(datetime.datetime.now().strftime("%S"))
       if time >= 0 and time <= 30:
         if ställd == False:
           await moon.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=datetime.datetime.now().strftime("%Y.%m.%d %H:%M") + " CST"))
@@ -68,18 +68,31 @@ async def on_ready():
           await moon.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="Type / to see available commands!"))
           ställd = False
       await asyncio.sleep(1)
+      
+@moon.event
+async def on_message(message: str):
+  try:
+    if message.guild.id == 000000000000:
+      server = moon.get_guild(000000000000)
+      if message.author.id == 000000000000:
+          await asyncio.sleep(7201)
+          channel = moon.get_channel(000000000000)
+          role = discord.utils.get(server.roles, id=000000000000)
+          await channel.send(role.mention + " Time to bump! Send /bump in order to take the server to the top of the disboard list.")
+  except AttributeError:
+    pass
 
 @moon.slash_command(name="translate", description="Translate from and to any language! To see available languages, type /languages")
-async def translate(ctx, message, language = ''):
+async def translate(ctx, message: str, language: str = ''):
     await ctx.defer()
     async with ctx.typing():
       await asyncio.sleep(1)
-    author = ctx.author.name
-    msg = message.split("/")
+    author: str = ctx.author.name
+    msg: list = message.split("/")
     if "discord.com" in msg:
       melding = await ctx.fetch_message(int(msg[6]))
-      message = melding.content
-      author = melding.author.name
+      message: str = melding.content
+      author: str = melding.author.name
     if language == "":
         language = 'en'
     try:
@@ -105,8 +118,8 @@ async def translate(ctx, message, language = ''):
         language = 'zh-tw'
       else:
         translation = translator.translate(message, dest=language)
-        traduccion = f"{translation.text}"
-        idioma = f"{translation.src}"
+        traduccion: str = f"{translation.text}"
+        idioma: str = f"{translation.src}"
         embed = discord.Embed(title="Translation from " + variables.LANGUAGES[idioma] + " to " + variables.LANGUAGES[language] + ":",
                               color=discord.Colour.random(),
                               url="https://translate.google.com/?sl=auto&tl=" + language + "&text="+ message.replace(" ", "%20")
@@ -125,7 +138,7 @@ async def translate(ctx, message, language = ''):
 
 @moon.slash_command(name="languages", description="Shows available languages for translation.")
 async def languages(ctx):
-  res = ""
+  res: str = ""
   for values in variables.LANGUAGES.values():
     res = res + "\n" + values
   embed = discord.Embed(title="Available languages",
@@ -135,14 +148,14 @@ async def languages(ctx):
     
 @moon.slash_command(name="ping" ,description="Shows bot's latency.")
 async def ping(ctx):
-  p = int(moon.latency * 1000)
+  p: int = int(moon.latency * 1000)
   await ctx.respond("Pong! Ping is " + str(p) + " ms")
 
 @moon.slash_command(name="avatar", description="Shows the avatar from the specified user.")
 async def avatar(ctx, member: discord.Member = ''):
     await ctx.defer()
     if member != "":
-      if member.id == 0000000000000000000:
+      if member.id == 000000000000:
         await ctx.respond("No, not she :3", ephemeral=True)
       else:
         usuario = await moon.fetch_user(member.id)
@@ -163,19 +176,19 @@ async def avatar(ctx, member: discord.Member = ''):
       await ctx.respond(embed=embed)
 
 @moon.slash_command(name="pic", description="Search any picture from the internet!")
-async def pic(ctx, picture):
+async def pic(ctx, picture: str):
   try:
     await ctx.defer()
     resp = requests.get("https://www.bing.com/images/search?q=" + picture.replace(" ", "+"))
     soup = BeautifulSoup(resp.text, 'lxml')
-    resimg = []
+    resimg: list = []
     for i in soup.find_all('a', {"class":"iusc"}):
       resimg.append(i['m'])
-    res = random.sample(resimg, len(resimg))
+    res: list = random.sample(resimg, len(resimg))
     res = random.sample(res, len(res))
-    dataa = random.choice(res)
-    u = str(dataa).split('"murl":"')
-    uu = str(u[1]).split('",')
+    dataa: str = random.choice(res)
+    u: list = str(dataa).split('"murl":"')
+    uu: list = str(u[1]).split('",')
     embed = discord.Embed(title="Picture finder: " + picture, 
                       url="https://www.bing.com/images/search?q=" + picture.replace(" ", "+"),
                       color=discord.Colour.random())
@@ -186,11 +199,11 @@ async def pic(ctx, picture):
     await ctx.respond("I couldn't find anything for `" + picture + "`. Try again or use different keywords.", ephemeral=True)
 
 @moon.slash_command(name="ball", description="Question game.")
-async def ball(ctx, question):
-  respuestas = bolaocho.responses
+async def ball(ctx, question: str):
+  respuestas: list = bolaocho.responses
   respuestas = random.sample(respuestas, len(respuestas))
   respuestas = random.sample(respuestas, len(respuestas))
-  response = random.choice(respuestas)
+  response: str = random.choice(respuestas)
   embed = discord.Embed(title=":8ball: MoonByul 8ball",
                         color=discord.Colour.random())
   embed.add_field(name=f":question: {ctx.author.name} asks:",
@@ -203,9 +216,9 @@ async def ball(ctx, question):
 
 @moon.slash_command(name="pride", description="Proud of who we are!")
 async def pride(ctx):
-  urls = random.sample(variables.lgbtqplus, len(variables.lgbtqplus))
+  urls: list = random.sample(variables.lgbtqplus, len(variables.lgbtqplus))
   urls = random.sample(urls, len(urls))
-  url = random.choice(urls)
+  url: str = random.choice(urls)
   embed = discord.Embed(title="Pride", 
                     color=discord.Colour.random())
   embed.set_image(url=url)
@@ -214,30 +227,30 @@ async def pride(ctx):
 @moon.slash_command(name="meme", description="Send a random meme!")
 async def meme(ctx):
     await ctx.defer()
-    imgs = []
-    subrdd = ["dankmemes", "memes", "terriblefacebookmemes", "MemesESP", "MemesEspanol"]
+    imgs: list = []
+    subrdd: list = ["dankmemes", "memes", "terriblefacebookmemes", "MemesESP", "MemesEspanol"]
     subrdd = random.sample(subrdd, len(subrdd))
-    subr = random.choice(subrdd)
+    subr: str = random.choice(subrdd)
     memes = await reddit.subreddit(subr)
     async for submission in memes.hot(limit=100):
       imgs.append(submission.url)
     imgs = random.sample(imgs, len(imgs))
     imgs = random.sample(imgs, len(imgs))
-    url = random.choice(imgs)
+    url: str = random.choice(imgs)
     await ctx.respond("Meme from r/" + subr + "\n" + url)
 
 @moon.slash_command(name="hug", description="Hug your friends!")
 async def hug(ctx, member: discord.Member = ""):
   if member != "" and member != ctx.author.mention:
-    if member.id == 0000000000000000000:
+    if member.id == 000000000000:
       async with ctx.typing():
           await asyncio.sleep(1)
       await ctx.respond(ctx.author.mention + " thank you! <3.")
     else:
-      huggs = random.sample(variables.hugs, len(variables.hugs))
+      huggs: list = random.sample(variables.hugs, len(variables.hugs))
       huggs = random.sample(huggs, len(huggs))
-      pic = random.choice(huggs)
-      nh = hugcsv(member.id)
+      pic: str = random.choice(huggs)
+      nh: int = hugcsv(member.id)
       embed = discord.Embed(color=discord.Colour.random())
       embed.set_footer(text=member.name + " has been hugged " + str(nh) + " times!")
       embed.set_image(url=pic)
@@ -249,30 +262,30 @@ async def hug(ctx, member: discord.Member = ""):
       await asyncio.sleep(1)
     await ctx.respond(ctx.author.mention + " has hugged themselves!")
 
-def hugcsv(memberr):
-  huglist = []
-  count = 0
+def hugcsv(memberr) -> int:
+  huglist: list = []
+  count: int = 0
   with open ("hugscount.csv", "r+") as f:
     hugs = csv.reader(f)
     huglist.extend(hugs)
     for row in huglist:
       if str(memberr) in row:
         row[1] = str(int(row[1]) + 1)
-        value = row[1]
+        value: int = int(row[1])
         count = 1
     if count == 0:
       huglist.append([memberr, 1])
-      value = 1
+      value: int = 1
   with open("hugscount.csv", "w+") as f:
     hugscsv = csv.writer(f, lineterminator='\n')
     hugscsv.writerows(huglist)
   return value
 
 @moon.slash_command(name="cry", description="Sometimes it's okay to cry and vent about your feelings :( <3")
-async def cry(ctx, reason = ""):
-  cryy = random.sample(variables.cryings, len(variables.cryings))
+async def cry(ctx, reason: str = ""):
+  cryy: list = random.sample(variables.cryings, len(variables.cryings))
   cryy = random.sample(cryy, len(cryy))
-  pic = random.choice(cryy)
+  pic: str = random.choice(cryy)
   embed = discord.Embed(description=ctx.author.mention + " is crying! 😭", 
                         color=discord.Colour.random())
   embed.set_image(url=pic)
@@ -281,9 +294,9 @@ async def cry(ctx, reason = ""):
   await ctx.respond(embed=embed)
   if reason != "":
       user = await moon.fetch_user(ctx.author.id)
-      huggs = random.sample(variables.hugs, len(variables.hugs))
+      huggs: list = random.sample(variables.hugs, len(variables.hugs))
       huggs = random.sample(huggs, len(huggs))
-      pic = random.choice(huggs)
+      pic: str = random.choice(huggs)
       embed = discord.Embed(title="Sending my hugs to you!", 
                             color=discord.Colour.random())
       embed.set_image(url=pic)
@@ -296,12 +309,12 @@ async def cry(ctx, reason = ""):
 
 @moon.slash_command(name="caramelldansen", description="Caramelldansen!")
 async def caramelldansen(ctx):
-  dansen = random.sample(variables.caramell, len(variables.caramell))
+  dansen: list = random.sample(variables.caramell, len(variables.caramell))
   dansen = random.sample(dansen, len(dansen))
-  pic = random.choice(dansen)
-  roll = ["https://youtu.be/xMHJGd3wwZk", "https://youtu.be/78ngmG_-Yck"]
+  pic: str = random.choice(dansen)
+  roll: list = ["https://youtu.be/xMHJGd3wwZk", "https://youtu.be/78ngmG_-Yck"]
   roll = random.sample(roll, len(roll))
-  rick = random.choice(roll)
+  rick: str = random.choice(roll)
   embed = discord.Embed(title="Caramelldansen", 
                         description="Dansa med oss, klappa era händer\ngör som vi gör, ta några steg åt vänster.\nLyssna och lär, missa inte chansen\n_**nu är vi här med caramelldansen**_ ^^.\n\n _oa oa oa oooa_",
                         url=rick,
@@ -313,7 +326,7 @@ async def caramelldansen(ctx):
   await ctx.respond(embed=embed)
 
 @moon.slash_command(name="math", description="Do simple arithmetic operations!")
-async def math(ctx, expression):
+async def math(ctx, expression: str):
   try:
     expresion = expression.replace('x', '*').replace('÷', '/').replace('^', '**')
     result = eval(expresion)
@@ -350,11 +363,11 @@ async def ban(ctx, member: discord.Member, reason=None):
 
 @moon.slash_command(name="flag", description="Play a flag trivia game!")
 async def flag(ctx):
-  responded = False
-  countries = random.sample(variables.countries, len(variables.countries))
+  responded: bool = False
+  countries: list = random.sample(variables.countries, len(variables.countries))
   countries = random.sample(countries, len(countries))
-  choice = random.choice(countries)
-  options = [random.choice(countries)]
+  choice: str = random.choice(countries)
+  options: list = [random.choice(countries)]
   options.insert(random.randint(0, len(options)), choice)
   options.insert(random.randint(0, len(options)), random.choice(countries))
   options.insert(random.randint(0, len(options)), random.choice(countries))
@@ -365,7 +378,7 @@ async def flag(ctx):
   button3 = Button(label=options[2], style=discord.ButtonStyle.primary)
   button4 = Button(label=options[3], style=discord.ButtonStyle.primary)
 
-  buttons = [button, button2, button3, button4]
+  buttons: list = [button, button2, button3, button4]
   
   async def bc(interaction):
     if interaction.user == ctx.author:
@@ -411,4 +424,13 @@ async def flag(ctx):
     embed.add_field(name="<:tache:1088935369787060414>", value="Whoops, time is up! <:thatcat:1087081229381292112> ❌", inline=False)
     await ctx.edit(embed=embed, view=view)
 
+@moon.slash_command(name="confess", description="Confess your secrets anonymously!")
+async def confess(ctx, confession: str):
+  embed = discord.Embed(title="Confession: ",
+                        description="_" + confession + "_",
+                        colour=discord.Colour.random())
+  embed.set_footer(text="Anonymous confessions from " + ctx.guild.name + " server.")
+  await ctx.respond("_ _")
+  await ctx.delete()
+  await ctx.send(embed=embed)
 moon.run("TOKEN")
