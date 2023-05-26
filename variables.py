@@ -1,4 +1,4 @@
-LANGUAGES = {
+LANGUAGES: dict = {
     'af': 'Afrikaans',
     'sq': 'Albanian',
     'am': 'Amharic',
@@ -110,7 +110,7 @@ LANGUAGES = {
     'zu': 'Zulu'
     }
 
-LANGUAGESSP = {
+LANGUAGESSP: dict = {
     'af': 'Afrikaans',
     'sq': 'Albanés',
     'am': 'Amhárico',
@@ -222,7 +222,7 @@ LANGUAGESSP = {
     'zu': 'Zulu'
     }
 
-hugs = [
+hugs: list = [
     "https://media.tenor.com/TQHYnWtxOOsAAAAi/hug.gif",
     "https://media.tenor.com/fFpVFqD_4esAAAAi/peluk.gif",
     "https://media.tenor.com/vnGjPkARnCsAAAAC/hug.gif",
@@ -256,7 +256,7 @@ hugs = [
     "https://media.tenor.com/QqeP0afq18sAAAAC/hug-mochi.gif"
 ]
 
-cryings = [
+cryings: list = [
     "https://media.tenor.com/dIR5p38-V4EAAAAi/cry-maddrey-maddrey.gif",
     "https://media.tenor.com/qzjLn_6vNhAAAAAi/capoo-bugcat.gif",
     "https://media.tenor.com/nz50SM3OwSsAAAAi/cat-peach.gif",
@@ -286,7 +286,7 @@ cryings = [
     "https://media.tenor.com/rIapMID9RHIAAAAC/cry-cute.gif"
 ]
 
-caramell = [
+caramell: list = [
     "https://media.tenor.com/dCq1bVzStK8AAAAC/caramelldansen-dancing.gif",
     "https://media.tenor.com/uqDPV_vPq5kAAAAC/caramelldansen-dance.gif",
     "https://media.tenor.com/ltZGwM03N_AAAAAC/caramell-dansen-dance.gif",
@@ -300,7 +300,7 @@ caramell = [
     "https://media.tenor.com/T8YZ5vXZhFUAAAAC/shinobu-shinobu-kocho.gif"
 ]
 
-lgbtqplus = [
+lgbtqplus: list = [
     "https://i.pinimg.com/236x/59/c8/45/59c84507bd7c0f309cd6633baea1cd41.jpg",
     "https://i.pinimg.com/564x/48/61/87/48618744e08a918d442fea8f22137010.jpg",
     "https://i.pinimg.com/236x/2d/a6/eb/2da6eb75ad81f42bb6c9e10dec28787f.jpg",
@@ -372,7 +372,7 @@ lgbtqplus = [
     "https://i.pinimg.com/564x/c2/d9/32/c2d932ce1cb411a44c156a22aa00ff9f.jpg"
 ]
 
-countries = [
+countries: list = [
     "Afghanistan",
     "Albania",
     "Algeria",
@@ -568,7 +568,7 @@ countries = [
     "Zimbabwe"
 ]
 
-COUNTRIESDIC = {
+COUNTRIESDIC: dict = {
     "Afghanistan":"af",
     "Albania":"al",
     "Algeria":"dz",
