@@ -15,7 +15,7 @@ Thank you so much for being a part of this story! I appreciate so much all of th
 those little things that made this work possible. MOONSTAR won't die though, I'll move most of its commands and functionalities to my webpage, where they'll continue working
 indefenitely and (perhaps) forever. Again, thank you so much for making this possible, and I hope we can keep counting on y'all for future projects <3.
 
-- Aurora Flores, 2023.
+- Mónica Gómez, 2023.
 """
 import time
 import discord
