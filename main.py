@@ -334,69 +334,6 @@ async def ban(ctx, member: discord.Member, reason=None):
     else:
       await ctx.respond("** " + member.name + "** has been banned for the reason: `" + reason + "`.")
 
-"""@moon.slash_command(name="flag", description="Play a flag trivia game!")
-async def flag(ctx):
-  responded: bool = False
-  countries: list = random.sample(variables.countries, len(variables.countries))
-  countries = random.sample(countries, len(countries))
-  choice: str = random.choice(countries)
-  options: list = [random.choice(countries)]
-  options.insert(random.randint(0, len(options)), choice)
-  options.insert(random.randint(0, len(options)), random.choice(countries))
-  options.insert(random.randint(0, len(options)), random.choice(countries))
-  options = random.sample(options, len(options))
-
-  button = Button(label=options[0], style=discord.ButtonStyle.primary)
-  button2 = Button(label=options[1], style=discord.ButtonStyle.primary)
-  button3 = Button(label=options[2], style=discord.ButtonStyle.primary)
-  button4 = Button(label=options[3], style=discord.ButtonStyle.primary)
-
-  buttons: list = [button, button2, button3, button4]
-  
-  async def bc(interaction):
-    if interaction.user == ctx.author:
-      nonlocal responded
-      responded = True
-      for item in buttons:
-        if interaction.data["custom_id"] == item.custom_id:
-          pressed = item
-      if pressed.label == choice:
-        embed.add_field(name="✅ Result:", value="You got it right! <a:hearts:1087081508302508204> 🎊", inline=False)
-        pressed.style = discord.ButtonStyle.success
-      else:
-        embed.add_field(name="❌ Result:", value="Whoops, you got it wrong. The correct answer was **" + choice + "** <:thatcat:1087081229381292112> ❌", inline=False)
-        pressed.style = discord.ButtonStyle.danger
-        for item in buttons:
-          if item.label == choice:
-            item.style = discord.ButtonStyle.success
-      for item in buttons:
-        item.disabled = True
-      await interaction.response.edit_message(embed=embed, view=view)
-    else:
-      await interaction.response.send_message("Hey! Only who sent the command can click the button.", ephemeral = True)
-  button.callback = bc
-  button2.callback = bc
-  button3.callback = bc
-  button4.callback = bc
-  view = View(timeout=15)
-  view.add_item(button)
-  view.add_item(button2)
-  view.add_item(button3)
-  view.add_item(button4)
-  embed = discord.Embed(title="Which country does this flag belong to? 👀",
-                        description="You have 10 seconds to answer.",
-                        color = discord.Colour.random()
-  )
-  embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-  embed.set_image(url="https://flagpedia.net/data/flags/w702/" + variables.COUNTRIESDIC[choice] + ".webp")
-  await ctx.respond(embed=embed, view=view)
-  await asyncio.sleep(10)
-  if responded == False:
-    for item in buttons:
-      item.disabled = True
-    embed.add_field(name="❌", value="Whoops, time is up! <:thatcat:1087081229381292112> ❌", inline=False)
-    await ctx.edit(embed=embed, view=view)"""
-
 @moon.slash_command(name="confess", description="Confess your secrets anonymously!")
 async def confess(ctx, confession: str):
   embed = discord.Embed(title="Confession: ",
@@ -406,6 +343,13 @@ async def confess(ctx, confession: str):
   await ctx.respond("_ _")
   await ctx.delete()
   await ctx.send(embed=embed)
+
+@moon.slash_command(name="about", description="About MOONSTAR")
+async def about(ctx):
+  await ctx.respond("""# MOONSTAR\n
+## An open-source slash commands-supporting bot for Discord.\n
+Copyright (c) 2023, Mónica Gómez (Autumn64)
+Licensed under BSD-3-Clause license. More information at https://codeberg.org/Autumn64/moonstar.""")  
 
 if __name__ == "__main__":
   moon.run(config["token"])

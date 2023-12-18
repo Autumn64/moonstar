@@ -11,7 +11,7 @@
 MOONSTAR is an open-source multi-purpose bot for Discord, that supports slash-commands and basic web scraping capabilities, and that is meant to stimulate interaction between users and the activity in your server!
 
 ### Contribution Guidelines
-In order to contribute, please fork this repository, and create a [pull request](https://codeberg.org/Autumn64/moonstar/pulls) with your proposed changes. You can relicense any forks you make from this project with any other license provided that you meet the requirements stipulated in the [project's original license](./LICENSE). However, any contributions made to this project must be under the BSD-3-Clause license, whether it comes from a fork or not.
+In order to contribute, please fork this repository, and create a [pull request](https://codeberg.org/Autumn64/moonstar/pulls) with your proposed changes. You can relicense any forks you make from this project with any other license provided that you meet the requirements stipulated in the [project's original license](./LICENSE). However, any contributions made to this project must be under the BSD-3-Clause license, whether they come from a fork or not.
 
 ### Features
 - Works primarily by slash commands.
