@@ -1,22 +1,4 @@
-"""
-With this commit, I end the work of 3 years of development of bots for Discord. From my first bot, called 'Thel Vadam, which I started in 2020,
-to Citlalmina, which was an evolution of 'Thel Vadam and that I started developing in 2021, to Lagertha, an unreleased bot that was my first bot to
-ever use a ctx environment instead of a on_message one, to Fatima, a bot I first created for a muslim friend from the Philippines, that after some time became my first bot to
-benefit from the back then newly implemented slash command functionalities, until here. Until MOONSTAR. MOONSTAR is, by far, the most advanced bot I have ever created.
-Not only I learnt a lot about stuff like web scraping, file manipulation and the way Python works in general, but I also was able to provide a wonderful
-experience to those who used my bot and praised its capabilities that were rather unusual and also more complex on popular mainstream bots.
-For some people my bot made their lives easier, for some others, my bot was a way they could find a bit of fun on their daily lives, while for others,
-MOONSTAR served as their company, like a close friend that always was there for them and always helped them to get over their own problems and situations.
-As for me, MOONSTAR was what made me feel sure about what I wanted to do in my future life; developing is my passion, and MOONSTAR made me see that's what
-I want to earn a living from, because that's what makes me happy and what fills my life and gives a sense to it. Maybe I don't have the best syntax, maybe the bot
-is not quite optimized and maybe the bot isn't on its best state possible, but it works. And it works flawlessly, at least for the users who appreciated my work.
-
-Thank you so much for being a part of this story! I appreciate so much all of the things we went through together, and I'll always keep in my heart everythng I learnt and
-those little things that made this work possible. MOONSTAR won't die though, I'll move most of its commands and functionalities to my webpage, where they'll continue working
-indefenitely and (perhaps) forever. Again, thank you so much for making this possible, and I hope we can keep counting on y'all for future projects <3.
-
-- Mónica Gómez, 2023.
-"""
+import json
 import time
 import discord
 import asyncio
@@ -37,25 +19,29 @@ from lxml import etree
 from discord import Option
 import bolaocho
 from linereader import copen
-import asyncpraw
 import os
 from math import sqrt
 import csv
+
+config: dict
+"""reddit = asyncpraw.Reddit(client_id='ID',
+                  client_secret='SECRET',
+                  user_agent='AGENT')"""
+
+with open ("config.json", "r") as f:
+  config = json.load(f)
 
 os.environ['TZ'] = 'America/Mexico_City'
 time.tzset()
 intents = discord.Intents.all()
 moon = commands.Bot(intents=intents)
 translator = Translator()
-reddit = asyncpraw.Reddit(client_id='ID',
-                  client_secret='SECRET',
-                  user_agent='AGENT')
 
 @moon.event
 async def on_ready():
     ställd: bool = False
-    print(" 안녕하세요 여러분 문별이다")
-    print('\n {0.user}으로서 봇이 성공적으로 로그인했습니다'.format(moon))
+    print(" Copyright (c) 2023, Mónica Gómez (Autumn64)\n Licensed under BSD-3-Clause license. More information at https://opensource.org/license/BSD-3-clause/.")
+    print(f'\n Logged in as {moon.user} at {datetime.datetime.now()}')
     print('\n')
     while True:
       time: int = int(datetime.datetime.now().strftime("%S"))
@@ -68,19 +54,6 @@ async def on_ready():
           await moon.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="Type / to see available commands!"))
           ställd = False
       await asyncio.sleep(1)
-      
-@moon.event
-async def on_message(message: str):
-  try:
-    if message.guild.id == 000000000000:
-      server = moon.get_guild(000000000000)
-      if message.author.id == 000000000000:
-          await asyncio.sleep(7201)
-          channel = moon.get_channel(000000000000)
-          role = discord.utils.get(server.roles, id=000000000000)
-          await channel.send(role.mention + " Time to bump! Send /bump in order to take the server to the top of the disboard list.")
-  except AttributeError:
-    pass
 
 @moon.slash_command(name="translate", description="Translate from and to any language! To see available languages, type /languages")
 async def translate(ctx, message: str, language: str = ''):
@@ -133,7 +106,7 @@ async def translate(ctx, message: str, language: str = ''):
         await ctx.respond("Sorry, I can't speak `" + language +"`. Write /languages to see all available languages.", ephemeral=True)
       else:
         await ctx.respond("Error: `" + str(e) + "`. This incident will be reported.", ephemeral=True)
-        with open('log.txt', 'a') as file:
+        with open('errors.rld', 'a') as file:
           file.write(str(datetime.datetime.now()) + " " + str(e) + ". Command used: " + "/translate " + message + " " + language)
 
 @moon.slash_command(name="languages", description="Shows available languages for translation.")
@@ -155,7 +128,7 @@ async def ping(ctx):
 async def avatar(ctx, member: discord.Member = ''):
     await ctx.defer()
     if member != "":
-      if member.id == 000000000000:
+      if member.id == config["autumn_id"]:
         await ctx.respond("No, not she :3", ephemeral=True)
       else:
         usuario = await moon.fetch_user(member.id)
@@ -224,7 +197,7 @@ async def pride(ctx):
   embed.set_image(url=url)
   await ctx.respond(embed=embed, ephemeral=True)
 
-@moon.slash_command(name="meme", description="Send a random meme!")
+"""@moon.slash_command(name="meme", description="Send a random meme!")
 async def meme(ctx):
     await ctx.defer()
     imgs: list = []
@@ -237,12 +210,12 @@ async def meme(ctx):
     imgs = random.sample(imgs, len(imgs))
     imgs = random.sample(imgs, len(imgs))
     url: str = random.choice(imgs)
-    await ctx.respond("Meme from r/" + subr + "\n" + url)
+    await ctx.respond("Meme from r/" + subr + "\n" + url)"""
 
 @moon.slash_command(name="hug", description="Hug your friends!")
 async def hug(ctx, member: discord.Member = ""):
   if member != "" and member != ctx.author.mention:
-    if member.id == 000000000000:
+    if member.id == config["bot_id"]:
       async with ctx.typing():
           await asyncio.sleep(1)
       await ctx.respond(ctx.author.mention + " thank you! <3.")
@@ -361,7 +334,7 @@ async def ban(ctx, member: discord.Member, reason=None):
     else:
       await ctx.respond("** " + member.name + "** has been banned for the reason: `" + reason + "`.")
 
-@moon.slash_command(name="flag", description="Play a flag trivia game!")
+"""@moon.slash_command(name="flag", description="Play a flag trivia game!")
 async def flag(ctx):
   responded: bool = False
   countries: list = random.sample(variables.countries, len(variables.countries))
@@ -391,7 +364,7 @@ async def flag(ctx):
         embed.add_field(name="✅ Result:", value="You got it right! <a:hearts:1087081508302508204> 🎊", inline=False)
         pressed.style = discord.ButtonStyle.success
       else:
-        embed.add_field(name="<:tache:1088935369787060414> Result:", value="Whoops, you got it wrong. The correct answer was **" + choice + "** <:thatcat:1087081229381292112> ❌", inline=False)
+        embed.add_field(name="❌ Result:", value="Whoops, you got it wrong. The correct answer was **" + choice + "** <:thatcat:1087081229381292112> ❌", inline=False)
         pressed.style = discord.ButtonStyle.danger
         for item in buttons:
           if item.label == choice:
@@ -421,8 +394,8 @@ async def flag(ctx):
   if responded == False:
     for item in buttons:
       item.disabled = True
-    embed.add_field(name="<:tache:1088935369787060414>", value="Whoops, time is up! <:thatcat:1087081229381292112> ❌", inline=False)
-    await ctx.edit(embed=embed, view=view)
+    embed.add_field(name="❌", value="Whoops, time is up! <:thatcat:1087081229381292112> ❌", inline=False)
+    await ctx.edit(embed=embed, view=view)"""
 
 @moon.slash_command(name="confess", description="Confess your secrets anonymously!")
 async def confess(ctx, confession: str):
@@ -433,4 +406,6 @@ async def confess(ctx, confession: str):
   await ctx.respond("_ _")
   await ctx.delete()
   await ctx.send(embed=embed)
-moon.run("TOKEN")
+
+if __name__ == "__main__":
+  moon.run(config["token"])

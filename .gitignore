@@ -1,0 +1,8 @@
+hugscount.csv
+pyvenv.cfg
+__pycache__
+bin
+include
+lib
+lib64
+config.json
