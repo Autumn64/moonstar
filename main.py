@@ -21,7 +21,6 @@ import bolaocho
 from linereader import copen
 import os
 from math import sqrt
-import csv
 
 config: dict
 """reddit = asyncpraw.Reddit(client_id='ID',
@@ -78,29 +77,17 @@ async def translate(ctx, message: str, language: str = ''):
         language = 'zh-cn'
       elif language.lower() == "traditional chinese":
         language = 'zh-tw'
-      for key,value in variables.LANGUAGESSP.items():
-        value = unidecode.unidecode(value)
-        language = unidecode.unidecode(language)
-        if language.lower() == value.lower():
-          language = key
-      if language.lower() == "chino":
-        language = 'zh-cn'
-      elif language.lower() == "chino simplificado":
-        language = 'zh-cn'
-      elif language.lower() == "chino tradicional":
-        language = 'zh-tw'
-      else:
-        translation = translator.translate(message, dest=language)
-        traduccion: str = f"{translation.text}"
-        idioma: str = f"{translation.src}"
-        embed = discord.Embed(title="Translation from " + variables.LANGUAGES[idioma] + " to " + variables.LANGUAGES[language] + ":",
-                              color=discord.Colour.random(),
-                              url="https://translate.google.com/?sl=auto&tl=" + language + "&text="+ message.replace(" ", "%20")
-        )
-        embed.add_field(name=author + " wrote:", value=message, inline=False)
-        embed.add_field(name="Which translates to:", value=traduccion, inline=False)
-        embed.set_thumbnail(url="https://cdn2.iconfinder.com/data/icons/web-store-crayons-volume-1/256/Language-512.png")
-        await ctx.respond(embed=embed)
+      translation = translator.translate(message, dest=language)
+      traduccion: str = f"{translation.text}"
+      idioma: str = f"{translation.src}"
+      embed = discord.Embed(title="Translation from " + variables.LANGUAGES[idioma] + " to " + variables.LANGUAGES[language] + ":",
+                            color=discord.Colour.random(),
+                            url="https://translate.google.com/?sl=auto&tl=" + language + "&text="+ message.replace(" ", "%20")
+      )
+      embed.add_field(name=author + " wrote:", value=message, inline=False)
+      embed.add_field(name="Which translates to:", value=traduccion, inline=False)
+      embed.set_thumbnail(url="https://cdn2.iconfinder.com/data/icons/web-store-crayons-volume-1/256/Language-512.png")
+      await ctx.respond(embed=embed)
     except Exception as e:
       if str(e) == "invalid destination language":
         await ctx.respond("Sorry, I can't speak `" + language +"`. Write /languages to see all available languages.", ephemeral=True)
@@ -123,30 +110,6 @@ async def languages(ctx):
 async def ping(ctx):
   p: int = int(moon.latency * 1000)
   await ctx.respond("Pong! Ping is " + str(p) + " ms")
-
-@moon.slash_command(name="avatar", description="Shows the avatar from the specified user.")
-async def avatar(ctx, member: discord.Member = ''):
-    await ctx.defer()
-    if member != "":
-      if member.id == config["autumn_id"]:
-        await ctx.respond("No, not she :3", ephemeral=True)
-      else:
-        usuario = await moon.fetch_user(member.id)
-        embed = discord.Embed(title=usuario.name + "'s Avatar", 
-                              url=usuario.avatar,
-                              color=discord.Colour.random())
-        embed.set_image(url=usuario.avatar)
-        embed.set_footer(text=f"Requested by: {ctx.author.name}")
-        await ctx.respond(embed=embed)
-    else:
-      embed = discord.Embed(title=ctx.author.name + "'s Avatar",
-                            url=ctx.author.avatar,
-                            color=discord.Colour.random())
-                #username = user.name
-      embed.set_image(url=ctx.author.avatar)
-      async with ctx.typing():
-        await asyncio.sleep(1)
-      await ctx.respond(embed=embed)
 
 @moon.slash_command(name="pic", description="Search any picture from the internet!")
 async def pic(ctx, picture: str):
@@ -211,74 +174,6 @@ async def meme(ctx):
     imgs = random.sample(imgs, len(imgs))
     url: str = random.choice(imgs)
     await ctx.respond("Meme from r/" + subr + "\n" + url)"""
-
-@moon.slash_command(name="hug", description="Hug your friends!")
-async def hug(ctx, member: discord.Member = ""):
-  if member != "" and member != ctx.author.mention:
-    if member.id == config["bot_id"]:
-      async with ctx.typing():
-          await asyncio.sleep(1)
-      await ctx.respond(ctx.author.mention + " thank you! <3.")
-    else:
-      huggs: list = random.sample(variables.hugs, len(variables.hugs))
-      huggs = random.sample(huggs, len(huggs))
-      pic: str = random.choice(huggs)
-      nh: int = hugcsv(member.id)
-      embed = discord.Embed(color=discord.Colour.random())
-      embed.set_footer(text=member.name + " has been hugged " + str(nh) + " times!")
-      embed.set_image(url=pic)
-      async with ctx.typing():
-          await asyncio.sleep(1)
-      await ctx.respond(ctx.author.mention + " has hugged " + member.mention + "!", embed=embed)   
-  else:
-    async with ctx.typing():
-      await asyncio.sleep(1)
-    await ctx.respond(ctx.author.mention + " has hugged themselves!")
-
-def hugcsv(memberr) -> int:
-  huglist: list = []
-  count: int = 0
-  with open ("hugscount.csv", "r+") as f:
-    hugs = csv.reader(f)
-    huglist.extend(hugs)
-    for row in huglist:
-      if str(memberr) in row:
-        row[1] = str(int(row[1]) + 1)
-        value: int = int(row[1])
-        count = 1
-    if count == 0:
-      huglist.append([memberr, 1])
-      value: int = 1
-  with open("hugscount.csv", "w+") as f:
-    hugscsv = csv.writer(f, lineterminator='\n')
-    hugscsv.writerows(huglist)
-  return value
-
-@moon.slash_command(name="cry", description="Sometimes it's okay to cry and vent about your feelings :( <3")
-async def cry(ctx, reason: str = ""):
-  cryy: list = random.sample(variables.cryings, len(variables.cryings))
-  cryy = random.sample(cryy, len(cryy))
-  pic: str = random.choice(cryy)
-  embed = discord.Embed(description=ctx.author.mention + " is crying! 😭", 
-                        color=discord.Colour.random())
-  embed.set_image(url=pic)
-  async with ctx.typing():
-    await asyncio.sleep(1)
-  await ctx.respond(embed=embed)
-  if reason != "":
-      user = await moon.fetch_user(ctx.author.id)
-      huggs: list = random.sample(variables.hugs, len(variables.hugs))
-      huggs = random.sample(huggs, len(huggs))
-      pic: str = random.choice(huggs)
-      embed = discord.Embed(title="Sending my hugs to you!", 
-                            color=discord.Colour.random())
-      embed.set_image(url=pic)
-      async with ctx.typing():
-        await asyncio.sleep(1)
-      try:
-        await user.send("Keep it up! I hope everything gets better for you <3 Ily.", embed=embed)
-      except:
-        await ctx.respond(ctx.author.mention + " Keep it up! I hope everything gets better for you <3 Ily.", embed=embed, ephemeral=True)
 
 @moon.slash_command(name="caramelldansen", description="Caramelldansen!")
 async def caramelldansen(ctx):
@@ -352,4 +247,5 @@ Copyright (c) 2023, Mónica Gómez (Autumn64)
 Licensed under BSD-3-Clause license. More information at https://codeberg.org/Autumn64/moonstar.""")  
 
 if __name__ == "__main__":
-  moon.run(config["token"])
+  cog = moon.load_extension('cogs.InteractionCommands')
+  moon.run(config["test_token"])
